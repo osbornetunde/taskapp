@@ -26,7 +26,6 @@ const match = {}
     }
     if(req.query.sortBy){
         const parts = req.query.sortBy.split(':')
-        console.log('parts', parts)
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
     }
     try{
