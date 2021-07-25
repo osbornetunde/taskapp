@@ -113,3 +113,35 @@ test('Should not update invalid user field', async () => {
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
         .expect(400)
 })
+
+test('Should not signup user with invalid name/email/password', async() => {
+    await request(app)
+        .post('/users').send({
+            name: '',
+            email: 'osbornetunde',
+            password: 'tunes'
+        })
+        .expect(400)
+})
+
+test('Should not update user if unauthenticated', async () => {
+    await request(app)
+        .patch('/users/me').send({
+            name:'Kolade'
+        }).expect(401)
+})
+
+test('Should not update user with invalid name/email/password', async () => {
+    await request(app)
+        .patch('/users/me').send({
+            email: 'osbornetunde'
+        })
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .expect(400)
+})
+
+test('Should not delete user if unauthenticated', async () => {
+    await request(app)
+        .delete('/users/me')
+        .expect(401)
+})
