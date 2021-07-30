@@ -1,0 +1,213 @@
+openapi: "3.0.2"
+info:
+  title: Task Manager API
+  version: "1.0"
+  description: An API for task manager service
+  contact:
+    name: Osborne Tunde
+    email: osbornetunde@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000
+    description: "Local Server"
+paths:
+  /users:
+    get:
+      tags:
+        - Fetch all users
+      description: Get the list of all users
+      responses:
+        '200':
+          description: Users fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '400':
+          description: Failed to fetch Users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Failed to fetch users'
+                status: 404
+
+    post:
+      tags:
+        - Post user
+      description: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User was created successfully
+        '400':
+          description: Failed to create User
+
+  /users/me:
+    get:
+      tags:
+        - Fetch a single user
+      description: Get a users
+      responses:
+        '200':
+          description: User fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+  /tasks:
+    get:
+      tags:
+        - Fetch all tasks
+      description: Fetch all tasks for a User
+      responses:
+        '200':
+          description: Tasks fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+        '500':
+            description: Failed to fetch tasks
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+  /tasks/{id}:
+    get:
+      tags:
+        - Get a tasks
+      description: Get a single task
+      responses:
+        '200':
+          description: Task fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Task not found
+                status: 404
+
+components:
+  schemas:
+    email:
+      type: string
+      description: user's email address
+      example: johndoe@gmail.com
+    age:
+      type: integer
+      description: user's age
+      example: 20
+    password:
+      type: string
+      description: user's password
+      example: password@
+    name:
+      type: string
+      pattern: "[a-z0-9]{8,64}"
+      minLength: 8
+      maxLength: 64
+      description: user's name
+      example: johndoe
+    avatar:
+      type: string
+      format: byte
+      description: user's avatar
+    description:
+      type: string
+      description: task's description
+      example: learning openapi
+    completed:
+      type: boolean
+      description: task's status
+      example: true
+    owner:
+      type: string
+      description: user's id
+      example: Yi89iouyhhfTG45
+    _id:
+      type: string
+      description: user's _id
+      example: Yi89iouyhhfTG
+    updatedAt:
+      type: string
+      format: 'date-time'
+      example: "2021-07-30T21:00:27.615Z"
+    createdAt:
+      type: string
+      format: 'date-time'
+      example: "2021-07-30T21:00:27.615Z"
+
+    User:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/_id'
+        name:
+          $ref: '#/components/schemas/name'
+        age:
+          $ref: '#/components/schemas/age'
+        email:
+          $ref: '#/components/schemas/email'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    Users:
+      type: array
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    Task:
+      type: object
+      properties:
+        description:
+          $ref: '#/components/schemas/description'
+        completed:
+          $ref: '#/components/schemas/completed'
+        owner:
+          $ref: '#/components/schemas/owner'
+    Tasks:
+      type: array
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        status:
+          type: string
+
+
+#  securitySchemes:
+#    Authorization:
+#      type: http
+#      scheme: basic
+#      bearerFormat: JWT
+
+
+
